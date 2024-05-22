@@ -9,7 +9,7 @@
   </p>
 </div>
 
-# Autodistill GPT-4 Module
+# Autodistill GPT Module
 
 This repository contains the code supporting the GPT (text) base model for use with [Autodistill](https://github.com/autodistill/autodistill).
 
@@ -22,7 +22,7 @@ Read the full [Autodistill documentation](https://autodistill.github.io/autodist
 To use GPT with autodistill, you need to install the following dependency:
 
 ```bash
-N/A
+pip3 install autodistill-gpt
 ```
 
 ## Quickstart
