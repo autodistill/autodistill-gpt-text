@@ -2,7 +2,7 @@ import setuptools
 from setuptools import find_packages
 import re
 
-with open("./autodistill_base_model/__init__.py", 'r') as f:
+with open("./autodistill_gpt_text/__init__.py", 'r') as f:
     content = f.read()
     # from https://www.py4u.net/discuss/139845
     version = re.search(r'__version__\s*=\s*[\'"]([^\'"]*)[\'"]', content).group(1)
@@ -11,16 +11,19 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="autodistill-base-model",
+    name="autodistill-gpt-text",
     version=version,
-    author="",
-    author_email="",
+    author="capjamesg",
+    author_email="support@roboflow.com",
     description="Model for use with Autodistill",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/autodistill/autodistil-gpt-text",
     install_requires=[
-        # list your requires
+        "autodistill",
+        "openai",
+        "tqdm",
+        "torch"
     ],
     packages=find_packages(exclude=("tests",)),
     extras_require={

@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 
 import torch
-from autodistill.detection import CaptionOntology
+from autodistill.text_classification import TextClassificationOntology
 from openai import OpenAI
 from tqdm import tqdm
 
@@ -14,12 +14,11 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @dataclass
 class GPTClassifier:
-    ontology: CaptionOntology
+    ontology: TextClassificationOntology
 
-    def __init__(self, ontology: CaptionOntology, api_key: str):
+    def __init__(self, ontology: TextClassificationOntology, api_key: str):
         self.client = OpenAI(api_key=api_key)
         self.ontology = ontology
-        pass
 
     def predict(self, input: str) -> str:
         classification = self.client.chat.completions.create(
@@ -27,13 +26,13 @@ class GPTClassifier:
             messages=[
                 {
                     "role": "system",
-                    "content": f"You are a text classifier. Classify the following text as either {', '.join(self.ontology.values())}. Only return the label name.",
+                    "content": f"You are a text classifier. Classify the following text as either {', '.join(self.ontology.prompts())}. Only return the label name.",
                 },
                 {"role": "user", "content": input},
             ],
         )
 
-        for label, caption in self.ontology.items():
+        for label, caption in self.ontology.promptMap.items():
             if caption == classification.choices[0].message.content:
                 return label
 
@@ -54,9 +53,7 @@ class GPTClassifier:
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             results = list(
                 executor.map(
-                    self.predict,
-                    [record["content"] for record in all_records],
-                    total=len(all_records),
+                    self.predict, [record["content"] for record in all_records]
                 )
             )
 
