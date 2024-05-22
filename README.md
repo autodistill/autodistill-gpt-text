@@ -22,13 +22,13 @@ Read the full [Autodistill documentation](https://autodistill.github.io/autodist
 To use GPT with autodistill, you need to install the following dependency:
 
 ```bash
-pip3 install autodistill-gpt
+pip3 install autodistill-gpt-text
 ```
 
 ## Quickstart
 
 ```python
-from autodistill_gpt import GPTClassifier
+from autodistill_gpt_text import GPTClassifier
 
 # define an ontology to map class names to our GPT prompt
 # the ontology dictionary has the format {caption: class}
