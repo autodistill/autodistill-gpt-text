@@ -16,13 +16,18 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class GPTClassifier:
     ontology: TextClassificationOntology
 
-    def __init__(self, ontology: TextClassificationOntology, api_key: str):
-        self.client = OpenAI(api_key=api_key)
+    def __init__(self, ontology: TextClassificationOntology, api_key: str, model_id = "gpt-3.5-turbo", model_base_url: str = None):
+        if model_base_url is None:
+            self.client = OpenAI(api_key=api_key)
+        else:
+            self.client = OpenAI(api_key=api_key, base_url=model_base_url)
+
         self.ontology = ontology
+        self.model_id = model_id
 
     def predict(self, input: str) -> str:
         classification = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=self.model_id,
             messages=[
                 {
                     "role": "system",
