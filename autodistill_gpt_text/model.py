@@ -49,22 +49,22 @@ class GPTClassifier:
 
         results = []
 
-        all_records = []
+        all_records = [json.loads(record) for record in records]
 
-        for record in tqdm(records):
-            record = json.loads(record)
-            all_records.append(record)
-
-        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             results = list(
-                executor.map(
+                tqdm(
+                    executor.map(
                     self.predict, [record["content"] for record in all_records]
+                    ),
+                    total=len(all_records),
                 )
             )
 
         for record, result in zip(all_records, results):
             record["classification"] = result
+            print(record)
 
-        with open(output_jsonl, "w") as f:
-            for record in results:
+        with open(output_jsonl, "w+") as f:
+            for record in all_records:
                 f.write(json.dumps(record) + "\n")
